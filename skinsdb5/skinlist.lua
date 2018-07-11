@@ -69,11 +69,8 @@ function skinsdb5.read_textures_and_meta()
 				local file = io.open(modpath.."/textures/"..fn, "r")
 				local skinformat = skinsdb5.get_skin_format(file)
 				skin_obj:set_meta("format", skinformat)
-				if skinformat == '1.8' then
-					skin_obj:set_textures({nil, fn })
-				else
-					skin_obj:set_textures({ fn })
-				end
+				skin_obj:set_texture(fn)
+
 				file:close()
 				skin_obj:set_meta("name", name)
 			end

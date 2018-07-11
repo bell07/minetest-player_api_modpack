@@ -16,15 +16,15 @@ function skinsdb5.get_skin_info_formspec(skin_name)
 	if not skin then
 		return ""
 	end
-	local textures = skin:get_textures()
+	local texture = skin:get_texture()
 	local m_name = skin:get_meta_string("name")
 	local m_author = skin:get_meta_string("author")
 	local m_license = skin:get_meta_string("license")
 	-- overview page
 	local formspec = "image[0,.75;1,2;"..skin:get_preview().."]"
-	if textures then
+	if texture then
 		formspec = formspec.."label[6,.5;"..S("Raw texture")..":]"
-		.."image[6,1;2,1;"..(textures[1] or textures[2]).."]"
+		.."image[6,1;2,1;"..(texture).."]"
 	end
 	if m_name ~= "" then
 		formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(m_name).."]"

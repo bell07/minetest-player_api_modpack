@@ -24,7 +24,6 @@ function skinsdb5.get(key)
 	end
 end
 
-
 -- Skin methods
 -- In this implementation it is just access to attrubutes wrapped
 -- but this way allow to redefine the functionality for more complex skins provider
@@ -44,12 +43,16 @@ function skin_class:get_meta_string(key)
 	return tostring(self:get_meta(key) or "")
 end
 
-function skin_class:set_textures(value)
+function skin_class:set_texture(value)
 	self.textures = value
 end
 
-function skin_class:get_textures()
-	return self.textures
+function skin_class:get_texture()
+	if type(self.textures) == 'string' then
+		return self.textures
+	else
+		return table.concat(self.textures, "^")
+	end
 end
 
 function skin_class:set_preview(value)

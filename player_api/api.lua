@@ -73,22 +73,29 @@ function player_api.set_model(player, model_name)
 end
 
 -- Apply textures to player model
-function player_api.set_textures(player, textures)
+function player_api.update_textures(player)
 	local name = player:get_player_name()
 	local model = models[player_model[name]]
 
-	if textures then
-		skin_textures[name] = textures
+	local textures = skin_textures[name] or (model and model.textures)
+
+	local new_textures
+	if type(textures) == 'string' then
+		new_textures = { textures }
 	else
-		textures = skin_textures[name] or (model and model.textures)
+		new_textures = table.copy(textures)
 	end
 
-	local new_textures = table.copy(textures)
 	for _, md in ipairs(registered_skin_modifiers) do
-		new_textures = md.modifier_func(new_textures, player, player_model[name]) or new_textures
+		new_textures = md.modifier_func(new_textures, player, player_model[name], player_skin[name]) or new_textures
 	end
+
+	if model.skin_modifier then
+		new_textures = model:skin_modifier(new_textures, player) or new_textures
+	end
+--print("set skin textures", dump(new_textures))
 	player_textures[name] = new_textures
-	player:set_properties({textures = new_textures,})
+	player:set_properties({textures = new_textures })
 end
 
 -- Called when a player's skin is changed
@@ -108,18 +115,11 @@ function player_api.set_skin(player, skin_name, is_default)
 	player_api.set_model(player, skin.model_name)
 
 	-- Handle skin textures
-	local textures
-	local t_type = type(skin.textures)
-	if t_type == "table" then
-		textures = skin.textures
-	elseif t_type == "string" then
-		textures = { skin.textures }
-	elseif t_type == "function" then
-		textures = skin:textures(player)
-	end
-	player_api.set_textures(player, textures)
-
 	player_skin[name] = skin_name
+	skin_textures[name] = skin.textures
+
+	player_api.update_textures(player)
+
 	if not is_default then
 		player:set_attribute("player_api:skin", skin_name)
 	end

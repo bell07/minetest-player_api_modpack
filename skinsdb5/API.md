@@ -28,11 +28,11 @@ Get object for already registered skin
 ## skin:register(key)
 Register the skin object in player_api with skin key
 
-## skin:set_textures(textures)
-Set the skin textures table - usually at the init time only
+## skin:set_texture(texture)
+Set the skin texture - usually at the init time only
 
-## skin:get_textures()
-Get the skin textures for any reason. Note to apply them the skin:set_skin() should be used
+## skin:get_texture()
+Get the raw skin texture for any reason. Note to apply them the skin:set_skin() should be used
 
 Could be redefined for dynamic texture generation
 

@@ -19,6 +19,7 @@ function player_api.register_model(name, def)
 end
 
 function player_api.register_skin(name, def)
+	def.skin_key = name
 	skins[name] = def
 end
 

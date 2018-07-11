@@ -1,10 +1,10 @@
 -- Load the skins
 local skins_dir_list = minetest.get_dir_list(minetest.get_modpath("spsp").."/textures")
 for _, fn in pairs(skins_dir_list) do
-	local skin_name = fn:lower():sub(1,-5) --cut .PNG
-	player_api.register_skin(skin_name, {
-		textures = fn,
-	})
+	if fn:sub(-4):lower() == '.png' then
+		local skin_name = fn:lower():sub(1,-5) --cut .png
+		player_api.register_skin(skin_name, { textures = fn })
+	end
 end
 
 -- Override the player_api hook

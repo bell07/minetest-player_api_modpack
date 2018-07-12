@@ -71,7 +71,7 @@ minetest.register_globalstep(function(dtime)
 			local model = player_api.registered_models[current.model]
 
 			wieldview:update_wielded_item_textures(player, current.textures)
-			current.textures[3] = current.textures.wielditem
+			current.textures[4] = current.textures.wielditem
 			current.textures.wielditem = nil
 			player:set_properties({textures = current.textures })
 		end

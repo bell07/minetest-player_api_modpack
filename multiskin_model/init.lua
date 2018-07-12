@@ -16,8 +16,8 @@ player_api.register_model("multiskin_model.b3d", {
 	textures = {
 		"blank.png", -- V1.0 Skin
 		"blank.png", -- V1.8 Skin
-		"blank.png", -- Wielded item
-		"blank.png"  -- ???
+		"blank.png", -- Armor?
+		"blank.png"  -- Wielded item
 	},
 	animations = {
 		stand = {x=0, y=79},
@@ -43,7 +43,7 @@ player_api.register_model("multiskin_model.b3d", {
 			textures.clothing = nil
 		end
 		if textures.wielditem then
-			textures[3] = textures.wielditem or textures[3]
+			textures[4] = textures.wielditem or textures[4]
 			textures.wielditem = nil
 		end
 	end,

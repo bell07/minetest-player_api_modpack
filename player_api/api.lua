@@ -97,7 +97,7 @@ function player_api.update_textures(player)
 	if model.skin_modifier then
 		new_textures = model:skin_modifier(new_textures, player, player_model[name], player_skin[name]) or new_textures
 	end
---print("set skin textures", dump(new_textures))
+print("set skin textures", dump(new_textures))
 	player_textures[name] = new_textures
 	player:set_properties({textures = new_textures })
 end

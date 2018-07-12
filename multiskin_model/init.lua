@@ -45,7 +45,7 @@ player_api.register_model("multiskin_model.b3d", {
 })
 
 
-player_api.register_skin_modifier(10, function(textures, player, player_model, player_skin)
+player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
 	if player_model ~= "multiskin_model.b3d" then
 		return
 	end

@@ -93,7 +93,7 @@ clothing.set_player_clothing = function(self, player)
 	self:run_callbacks("on_update", player)
 end
 
-player_api.register_skin_modifier(10, function(textures, player, player_model, player_skin)
+player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
 	local name = player:get_player_name()
 	local clothing_textures = clothing.player_textures[name]
 	if not clothing_textures then

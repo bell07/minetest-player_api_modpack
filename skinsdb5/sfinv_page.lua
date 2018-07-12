@@ -16,6 +16,5 @@ sfinv.register_page("skinsdb5:overview", {
 	end,
 	on_player_receive_fields = function(self, player, context, fields)
 		skinsdb5.on_skin_selection_receive_fields(player, context, fields)
-		sfinv.set_player_inventory_formspec(player)
 	end
 })

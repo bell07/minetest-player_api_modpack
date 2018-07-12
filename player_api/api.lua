@@ -13,6 +13,7 @@ player_api.registered_skins = { }
 local models = player_api.registered_models
 local skins = player_api.registered_skins
 local registered_skin_modifiers = {}
+local registered_on_skin_change = {}
 
 function player_api.register_model(name, def)
 	models[name] = def
@@ -23,9 +24,12 @@ function player_api.register_skin(name, def)
 	skins[name] = def
 end
 
-function player_api.register_skin_modifier(layer, modifier_func)
-	table.insert(registered_skin_modifiers, { layer = layer, modifier_func = modifier_func })
-	table.sort(registered_skin_modifiers, function(a,b) return a.layer < b.layer end)
+function player_api.register_skin_modifier(modifier_func)
+	table.insert(registered_skin_modifiers, modifier_func)
+end
+
+function player_api.register_on_skin_change(modifier_func)
+	table.insert(registered_on_skin_change, modifier_func)
 end
 
 -- Player stats and animations
@@ -86,12 +90,12 @@ function player_api.update_textures(player)
 		new_textures = table.copy(textures)
 	end
 
-	for _, md in ipairs(registered_skin_modifiers) do
-		new_textures = md.modifier_func(new_textures, player, player_model[name], player_skin[name]) or new_textures
+	for _, modifier_func in ipairs(registered_skin_modifiers) do
+		new_textures = modifier_func(new_textures, player, player_model[name], player_skin[name]) or new_textures
 	end
 
 	if model.skin_modifier then
-		new_textures = model:skin_modifier(new_textures, player) or new_textures
+		new_textures = model:skin_modifier(new_textures, player, player_model[name], player_skin[name]) or new_textures
 	end
 --print("set skin textures", dump(new_textures))
 	player_textures[name] = new_textures
@@ -122,6 +126,10 @@ function player_api.set_skin(player, skin_name, is_default)
 
 	if not is_default then
 		player:set_attribute("player_api:skin", skin_name)
+	end
+
+	for _, modifier_func in ipairs(registered_on_skin_change) do
+		modifier_func(player, player_model[name], skin_name)
 	end
 end
 

@@ -28,6 +28,12 @@ player_api.register_model("multiskin_model.b3d", {
 		sit = {x=81, y=160},
 	},
 	skin_modifier = function(model, textures, player)
+		if #textures < 4 then
+			-- fill up with blanks
+			for i = #textures, 4 do
+				table.insert(textures, "blank.png")
+			end
+		end
 		if textures.cape then
 			textures[1] = concat_texture(textures[1], textures.cape)
 			textures.cape = nil
@@ -36,14 +42,12 @@ player_api.register_model("multiskin_model.b3d", {
 			textures[2] = concat_texture(textures[2], textures.clothing)
 			textures.clothing = nil
 		end
-		-- set blank texture to avoid nontransparent textures above
-		textures[1] = textures[1] or "blank.png"
-		textures[2] = textures[2] or "blank.png"
-		textures[3] = textures[3] or "blank.png"
-		textures[4] = textures[4] or "blank.png"
+		if textures.wielditem then
+			textures[3] = textures.wielditem or textures[3]
+			textures.wielditem = nil
+		end
 	end,
 })
-
 
 player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
 	if player_model ~= "multiskin_model.b3d" then

@@ -16,6 +16,7 @@ The model does support additional skin modifiers also
 player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
 	textures.cape = "cape.png"
 	textures.clothing = "clothing.png"
+	textures.armor    = "armor.png"
 	textures.wielditem = "wielded_item.png"
 end
 ```

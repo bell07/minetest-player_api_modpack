@@ -42,6 +42,10 @@ player_api.register_model("multiskin_model.b3d", {
 			textures[2] = concat_texture(textures[2], textures.clothing)
 			textures.clothing = nil
 		end
+		if textures.armor then
+			textures[3] = concat_texture(textures[3], textures.armor)
+			textures.armor = nil
+		end
 		if textures.wielditem then
 			textures[4] = textures.wielditem or textures[4]
 			textures.wielditem = nil

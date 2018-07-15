@@ -192,17 +192,21 @@ end
 local function change_skin(player)
 	local playername = player:get_player_name()
 	local skin_obj = player_api.registered_skins["character_creator:"..playername]
-	player:set_properties({
-		visual_size = {
-			x = tonumber(player:get_attribute("character_creator:width")),
-			y = tonumber(player:get_attribute("character_creator:height"))
-		},
-	})
 	skin_obj.texture = get_texture(player)
 	save_skin(player)
 	player_api.update_textures(player)
 end
 
+player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
+	if player_skin:sub(1,18) == 'character_creator:' then
+		player:set_properties({
+			visual_size = {
+				x = tonumber(player:get_attribute("character_creator:width")),
+				y = tonumber(player:get_attribute("character_creator:height"))
+			},
+		})
+	end
+end)
 
 minetest.register_on_joinplayer(function(player)
 	local playername = player:get_player_name()

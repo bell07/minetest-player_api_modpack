@@ -54,9 +54,9 @@ function skinsdb5.read_textures_and_meta()
 		end
 
 		if name then
-			local skin_obj = skinsdb5.get(name)
+			local skin_obj = player_api.registered_skins[name]
 			if not skin_obj then
-				skin_obj = skinsdb5.new()
+				skin_obj = {}
 				player_api.register_skin(name, skin_obj)
 			end
 			if is_preview then
@@ -78,7 +78,7 @@ function skinsdb5.read_textures_and_meta()
 	for _, fn in pairs(meta_dir_list) do
 		if fn:sub(-4):lower() == '.txt' then
 			local skin_name = fn:lower():sub(1,-5) --cut .txt
-			local skin_obj = skinsdb5.get(skin_name)
+			local skin_obj = player_api.registered_skins[skin_name]
 			if skin_obj then
 				local file = io.open(modpath.."/meta/"..fn, "r")
 				if file then
@@ -97,14 +97,13 @@ end
 function skinsdb5.get_skinlist_for_player(playername)
 	local skinslist = {}
 	for _, skin in pairs(player_api.registered_skins) do
-		if not skin.__index then
-			skin = skinsdb5.new(skin)
-		end
-		if skin:is_applicable_for_player(playername) and skin.in_inventory_list ~= false then
+		if skin.in_inventory_list ~= false and
+				(not skin.playername or (skin.playername:lower() == playername:lower())) then
 			table.insert(skinslist, skin)
 		end
 	end
-	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
+	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or
+			a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
 	return skinslist
 end
 
@@ -113,13 +112,11 @@ function skinsdb5.get_skinlist_with_meta(key, value)
 	assert(key, "key parameter for skinsdb5.get_skinlist_with_meta() missed")
 	local skinslist = {}
 	for _, skin in pairs(player_api.registered_skins) do
-		if not skin.__index then
-			skin = skinsdb5.new(skin)
-		end
 		if skin.name == value then
 			table.insert(skinslist, skin)
 		end
 	end
-	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
+	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or
+			a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
 	return skinslist
 end

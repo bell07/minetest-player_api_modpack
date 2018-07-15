@@ -26,7 +26,7 @@ minetest.register_chatcommand("skinsdb", {
 		if word == 'set' or word == 'list' or word == 'show' or word == 'ui' then
 			command = word
 			parameter = words[2]
-		elseif skinsdb5.get(word) then
+		elseif player_api.registered_skins[word] then
 			command = 'set'
 			parameter = word
 		elseif not word then
@@ -36,7 +36,7 @@ minetest.register_chatcommand("skinsdb", {
 		end
 
 		if command == "set" then
-			if skinsdb5.get(parameter) then
+			if player_api.registered_skins[parameter] then
 				player_api.set_skin(player, parameter)
 				return true, S("skin set to").." "..parameter
 			else

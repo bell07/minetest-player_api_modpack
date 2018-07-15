@@ -12,11 +12,11 @@ end
 
 -- Show skin info
 function skinsdb5.get_skin_info_formspec(skin_name)
-	local skin = skinsdb5.get(skin_name)
+	local skin = player_api.registered_skins[skin_name]
 	if not skin then
 		return ""
 	end
-	local texture = skin:get_texture()
+	local texture = skin.texture or (skin.textures and table.concat(skin.textures, "^"))
 	local formspec = ""
 	if skin.preview then
 		formspec = formspec.."image[0,.75;1,2;"..skin.preview.."]"
@@ -47,7 +47,7 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 		context.total_pages = page
 	end
 	if not context.skins_page then
-		local current_skin = skinsdb5.get(player_api.get_skin(player))
+		local current_skin = player_api.registered_skins[player_api.get_skin(player)]
 		context.skins_page = (current_skin and current_skin._inv_page) or 1
 	end
 	context.dropdown_values = nil

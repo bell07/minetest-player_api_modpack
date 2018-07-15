@@ -12,7 +12,6 @@ else
 	skinsdb5.S = function(s) return s end
 end
 
-dofile(skinsdb5.modpath.."/skin_meta_api.lua")
 dofile(modpath.."/skinlist.lua")
 dofile(modpath.."/formspecs.lua")
 dofile(modpath.."/chatcommands.lua")

@@ -42,8 +42,7 @@ player_api.default_skin = "sam"
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
 	player_api.player_attached[player:get_player_name()] = false
-	local current_skin, _ = player_api.get_skin(player)
-	player_api.set_skin(player, current_skin, true)
+	player_api.set_skin(player,player_api.get_skin(player))
 	player:set_local_animation(
 		{x = 0,   y = 79},
 		{x = 168, y = 187},

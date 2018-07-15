@@ -110,8 +110,8 @@ function player_api.set_skin(player, skin_name, is_default)
 	if not skin then
 		skin_name = player_api.default_skin
 		skin = skins[skin_name]
+		is_default = true
 	end
-
 	if player_skin[name] == skin_name then
 		return
 	end

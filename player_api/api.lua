@@ -60,9 +60,6 @@ function player_api.set_model(player, model_name)
 		model = models[model_name]
 	end
 
-	if player_model[name] == model_name then
-		return
-	end
 	player:set_properties({
 		mesh = model_name,
 		textures = player_textures[name] or model.textures,
@@ -103,7 +100,7 @@ function player_api.update_textures(player)
 	end
 --print("set skin textures", dump(textures))
 	player_textures[name] = textures
-	player:set_properties({textures = textures })
+	player:set_properties({textures = textures})
 end
 
 -- Called when a player's skin is changed

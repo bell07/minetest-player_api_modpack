@@ -24,9 +24,7 @@ function skinsdb5.get_skin_info_formspec(skin_name)
 	if texture then
 		formspec = formspec.."label[6,.5;"..S("Raw texture")..":]image[6,1;2,1;"..texture.."]"
 	end
-	if skin.name then
-		formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(skin.name).."]"
-	end
+	formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(skin.description or skin.name).."]"
 	if skin.author then
 		formspec = formspec.."label[2,1;"..S("Author")..": "..minetest.formspec_escape(skin.author).."]"
 	end

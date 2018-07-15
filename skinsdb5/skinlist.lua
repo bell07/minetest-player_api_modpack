@@ -1,22 +1,3 @@
--- Check Skin format (code stohlen from stu's multiskin)
-function skinsdb5.get_skin_format(file)
-	file:seek("set", 1)
-	if file:read(3) == "PNG" then
-		file:seek("set", 16)
-		local ws = file:read(4)
-		local hs = file:read(4)
-		local w = ws:sub(3, 3):byte() * 256 + ws:sub(4, 4):byte()
-		local h = hs:sub(3, 3):byte() * 256 + hs:sub(4, 4):byte()
-		if w >= 64 then
-			if w == h then
-				return "1.8"
-			elseif w == h * 2 then
-				return "1.0"
-			end
-		end
-	end
-end
-
 function skinsdb5.read_textures_and_meta()
 	local modpath = minetest.get_modpath(minetest.get_current_modname())
 	local skins_dir_list = minetest.get_dir_list(modpath..'/textures/')
@@ -63,13 +44,15 @@ function skinsdb5.read_textures_and_meta()
 				skin_obj.preview = fn
 			else
 				skin_obj.sort_id = sort_id
+				skin_obj.texture = fn
 				if playername then
 					skin_obj.playername = playername
 				end
-				local file = io.open(modpath.."/textures/"..fn, "r")
-				skin_obj.format = skinsdb5.get_skin_format(file)
-				skin_obj.texture = fn
-				file:close()
+				if minetest.global_exists("multiskin_model") then
+					local file = io.open(modpath.."/textures/"..fn, "r")
+					skin_obj.format = multiskin_model.get_skin_format(file)
+					file:close()
+				end
 			end
 		end
 	end

@@ -57,3 +57,24 @@ player_api.register_skin_modifier(function(textures, player, player_model, playe
 		table.insert(textures, 1, "blank.png")
 	end
 end)
+
+
+-- Check Skin format (code stohlen from stu's multiskin)
+multiskin_model = {}
+function multiskin_model.get_skin_format(file)
+	file:seek("set", 1)
+	if file:read(3) == "PNG" then
+		file:seek("set", 16)
+		local ws = file:read(4)
+		local hs = file:read(4)
+		local w = ws:sub(3, 3):byte() * 256 + ws:sub(4, 4):byte()
+		local h = hs:sub(3, 3):byte() * 256 + hs:sub(4, 4):byte()
+		if w >= 64 then
+			if w == h then
+				return "1.8"
+			elseif w == h * 2 then
+				return "1.0"
+			end
+		end
+	end
+end

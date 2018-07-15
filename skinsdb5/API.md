@@ -4,9 +4,6 @@
 Read the textures folder and register all files found as skins. Include corresponding metadata from meta folder
 - Use the same functionaltiy as in skinsdb5 for other mods providing skins
 
-## skinsdb5.get_skin_format(file)
-Returns the skin format version ("1.0" or "1.8"). File is an open file handle to the texture file
-
 ## skinsdb5.get_skinlist_for_player(playername)
 Get all allowed skins for player. All public and all player's private skins. If playername not given only public skins returned
 

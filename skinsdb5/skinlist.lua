@@ -81,7 +81,7 @@ function skinsdb5.get_skinlist_for_player(playername)
 	local skinslist = {}
 	for _, skin in pairs(player_api.registered_skins) do
 		if skin.in_inventory_list ~= false and
-				(not skin.playername or (skin.playername:lower() == playername:lower())) then
+				(not skin.playername or (playername and skin.playername:lower() == playername:lower())) then
 			table.insert(skinslist, skin)
 		end
 	end
@@ -95,7 +95,7 @@ function skinsdb5.get_skinlist_with_meta(key, value)
 	assert(key, "key parameter for skinsdb5.get_skinlist_with_meta() missed")
 	local skinslist = {}
 	for _, skin in pairs(player_api.registered_skins) do
-		if skin.name == value then
+		if skin[key] == value then
 			table.insert(skinslist, skin)
 		end
 	end

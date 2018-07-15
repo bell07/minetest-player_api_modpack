@@ -16,14 +16,13 @@ function skinsdb5.get_skin_info_formspec(skin_name)
 	if not skin then
 		return ""
 	end
-	local texture = skin.texture or (skin.textures and table.concat(skin.textures, "^"))
+	local texture = skin.texture or (skin.textures and skin.textures[1])
 	local formspec = ""
 	if skin.preview then
 		formspec = formspec.."image[0,.75;1,2;"..skin.preview.."]"
 	end
 	if texture then
-		formspec = formspec.."label[6,.5;"..S("Raw texture")..":]"
-		.."imagsdb5/formspecs.lua:19e[6,1;2,1;"..(texture).."]"
+		formspec = formspec.."label[6,.5;"..S("Raw texture")..":]image[6,1;2,1;"..texture.."]"
 	end
 	if skin.name then
 		formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(skin.name).."]"

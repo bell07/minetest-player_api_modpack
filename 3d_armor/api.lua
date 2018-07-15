@@ -274,7 +274,6 @@ armor.set_player_armor = function(self, player)
 	else
 		player:set_physics_override(physics)
 	end
-print("set", texture)
 	self.textures[name] = texture
 	self.def[name].level = self.def[name].groups.fleshy or 0
 	self.def[name].state = state
@@ -369,7 +368,7 @@ armor.damage = function(self, player, index, stack, use)
 end
 
 armor.get_preview = function(self, name)
-	local player = self:get_valid_player(player, "[get_preview]")
+	local player = minetest.get_player_by_name(name)
 	if player then
 		local current_skin = player_api.get_skin(player)
 		return player_api.registered_skins[current_skin].preview or 'character_preview.png'

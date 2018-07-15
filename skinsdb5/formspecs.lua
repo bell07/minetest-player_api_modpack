@@ -37,29 +37,37 @@ function skinsdb5.get_skin_info_formspec(skin_name)
 end
 
 function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
-	context.skins_list = skinsdb5.get_skinlist_for_player(player:get_player_name())
+	local skins_list = skinsdb5.get_skinlist_for_player(player:get_player_name())
+	local current_skin = player_api.registered_skins[player_api.get_skin(player)]
+	context.skins_list = {}
 	context.total_pages = 1
-	for i, skin in ipairs(context.skins_list ) do
-		local page = math.floor((i-1) / 16)+1
-		skin._inv_page = page
-		skin._inv_page_index = (i-1)%16+1
-		context.total_pages = page
-	end
-	if not context.skins_page then
-		local current_skin = player_api.registered_skins[player_api.get_skin(player)]
-		context.skins_page = (current_skin and current_skin._inv_page) or 1
-	end
 	context.dropdown_values = nil
 
-	local page = context.skins_page
+	for i, skin in ipairs(skins_list) do
+		local page = math.floor((i-1) / 16)+1
+		local page_index = (i-1)%16+1
+		context.total_pages = page
+		context.skins_list[i] = {
+			name = skin.name,
+			page = page,
+			page_index = page_index
+		}
+
+		if not context.skins_page and skin.name == current_skin then
+			context.skins_page = page
+		end
+	end
+
+	context.skins_page = context.skins_page or 1
+	local current_page = context.skins_page
 	local formspec = ""
-	for i = (page-1)*16+1, page*16 do
-		local skin = context.skins_list[i]
+	for i = (current_page-1)*16+1, current_page*16 do
+		local skin = skins_list[i]
 		if not skin then
 			break
 		end
 
-		local index_p = skin._inv_page_index
+		local index_p = context.skins_list[i].page_index
 		local x = (index_p-1) % 8
 		local y
 		if index_p > 8 then
@@ -73,8 +81,8 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 	end
 
 	if context.total_pages > 1 then
-		local page_prev = page - 1
-		local page_next = page + 1
+		local page_prev = current_page - 1
+		local page_next = current_page + 1
 		if page_prev < 1 then
 			page_prev = context.total_pages
 		end

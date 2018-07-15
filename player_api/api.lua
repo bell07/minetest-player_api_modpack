@@ -20,7 +20,7 @@ function player_api.register_model(name, def)
 end
 
 function player_api.register_skin(name, def)
-	def.skin_key = name
+	def.name = name
 	skins[name] = def
 end
 
@@ -80,26 +80,30 @@ end
 function player_api.update_textures(player)
 	local name = player:get_player_name()
 	local model = models[player_model[name]]
+	local skin = skins[player_skin[name]]
 
-	local textures = skin_textures[name] or (model and model.textures)
-
-	local new_textures
-	if type(textures) == 'string' then
-		new_textures = { textures }
+	local textures
+	if skin.textures then
+		textures = table.copy(skin.textures)
+		skin_textures[name] = skin.textures
+	elseif skin.texture then
+		textures = { skin.texture }
+		skin_textures[name] = { skin.texture }
 	else
-		new_textures = table.copy(textures)
+		textures = table.copy(model.textures)
+		skin_textures[name] = model.textures
 	end
 
 	for _, modifier_func in ipairs(registered_skin_modifiers) do
-		new_textures = modifier_func(new_textures, player, player_model[name], player_skin[name]) or new_textures
+		textures = modifier_func(textures, player, player_model[name], player_skin[name]) or textures
 	end
 
 	if model.skin_modifier then
-		new_textures = model:skin_modifier(new_textures, player, player_model[name], player_skin[name]) or new_textures
+		textures = model:skin_modifier(textures, player, player_model[name], player_skin[name]) or textures
 	end
-print("set skin textures", dump(new_textures))
-	player_textures[name] = new_textures
-	player:set_properties({textures = new_textures })
+--print("set skin textures", dump(textures))
+	player_textures[name] = textures
+	player:set_properties({textures = textures })
 end
 
 -- Called when a player's skin is changed
@@ -120,8 +124,6 @@ function player_api.set_skin(player, skin_name, is_default)
 
 	-- Handle skin textures
 	player_skin[name] = skin_name
-	skin_textures[name] = skin.textures
-
 	player_api.update_textures(player)
 
 	if not is_default then

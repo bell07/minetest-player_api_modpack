@@ -16,7 +16,7 @@ player_api.register_model("multiskin_model.b3d", {
 	textures = {
 		"blank.png", -- V1.0 Skin
 		"blank.png", -- V1.8 Skin
-		"blank.png", -- Armor?
+		"blank.png", -- Armor
 		"blank.png"  -- Wielded item
 	},
 	animations = {

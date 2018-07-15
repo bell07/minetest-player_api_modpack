@@ -56,11 +56,11 @@ minetest.register_chatcommand("skinsdb", {
 
 			local current_skin_key = player_api.get_skin(player)
 			for _, skin in ipairs(list) do
-				local info = skin.skin_key.." - "
-						..S("Name").."="..skin:get_meta_string("name").." "
-						..S("Author").."="..skin:get_meta_string("author").." "
-						..S("License").."="..skin:get_meta_string("license")
-				if skin.skin_key == current_skin_key then
+				local info = skin.name.." - "
+						..S("Name").."="..(skin.description or skin.name or "").." "
+						..S("Author").."="..(skin.author or "").." "
+						..S("License").."="..(skin.license or "")
+				if skin.name == current_skin_key then
 					info = minetest.colorize("#00FFFF", info)
 				end
 				minetest.chat_send_player(name, info)

@@ -57,22 +57,19 @@ function skinsdb5.read_textures_and_meta()
 			local skin_obj = skinsdb5.get(name)
 			if not skin_obj then
 				skin_obj = skinsdb5.new()
-				skin_obj:register(name)
+				player_api.register_skin(name, skin_obj)
 			end
 			if is_preview then
-				skin_obj:set_preview(fn)
+				skin_obj.preview = fn
 			else
-				skin_obj:set_meta("_sort_id", sort_id)
+				skin_obj.sort_id = sort_id
 				if playername then
-					skin_obj:set_meta("playername", playername)
+					skin_obj.playername = playername
 				end
 				local file = io.open(modpath.."/textures/"..fn, "r")
-				local skinformat = skinsdb5.get_skin_format(file)
-				skin_obj:set_meta("format", skinformat)
-				skin_obj:set_texture(fn)
-
+				skin_obj.format = skinsdb5.get_skin_format(file)
+				skin_obj.texture = fn
 				file:close()
-				skin_obj:set_meta("name", name)
 			end
 		end
 	end
@@ -87,9 +84,9 @@ function skinsdb5.read_textures_and_meta()
 				if file then
 					local data = string.split(file:read("*all"), "\n", 3)
 					file:close()
-					skin_obj:set_meta("name", data[1])
-					skin_obj:set_meta("author", data[2])
-					skin_obj:set_meta("license", data[3])
+					skin_obj.description = data[1]
+					skin_obj.author = data[2]
+					skin_obj.license = data[3]
 				end
 			end
 		end
@@ -103,11 +100,11 @@ function skinsdb5.get_skinlist_for_player(playername)
 		if not skin.__index then
 			skin = skinsdb5.new(skin)
 		end
-		if skin:is_applicable_for_player(playername) and skin:get_meta("in_inventory_list") ~= false then
+		if skin:is_applicable_for_player(playername) and skin.in_inventory_list ~= false then
 			table.insert(skinslist, skin)
 		end
 	end
-	table.sort(skinslist, function(a,b) return a:get_meta("_sort_id") < b:get_meta("_sort_id") end)
+	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
 	return skinslist
 end
 
@@ -119,10 +116,10 @@ function skinsdb5.get_skinlist_with_meta(key, value)
 		if not skin.__index then
 			skin = skinsdb5.new(skin)
 		end
-		if skin:get_meta(key) == value then
+		if skin.name == value then
 			table.insert(skinslist, skin)
 		end
 	end
-	table.sort(skinslist, function(a,b) return a:get_meta("_sort_id") < b:get_meta("_sort_id") end)
+	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
 	return skinslist
 end

@@ -3,7 +3,7 @@ local skins_dir_list = minetest.get_dir_list(minetest.get_modpath("spsp").."/tex
 for _, fn in pairs(skins_dir_list) do
 	if fn:sub(-4):lower() == '.png' then
 		local skin_name = fn:lower():sub(1,-5) --cut .png
-		player_api.register_skin(skin_name, { textures = fn })
+		player_api.register_skin(skin_name, { texture = fn })
 	end
 end
 

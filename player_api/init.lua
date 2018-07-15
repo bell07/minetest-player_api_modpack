@@ -28,7 +28,7 @@ player_api.register_model("upright_sprite", {
 
 -- Default player skin
 player_api.register_skin("sam", {
-	textures = "character.png",
+	texture = "character.png",
 })
 
 player_api.register_skin("sprite", {

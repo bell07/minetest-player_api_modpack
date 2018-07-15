@@ -17,23 +17,22 @@ function skinsdb5.get_skin_info_formspec(skin_name)
 		return ""
 	end
 	local texture = skin:get_texture()
-	local m_name = skin:get_meta_string("name")
-	local m_author = skin:get_meta_string("author")
-	local m_license = skin:get_meta_string("license")
-	-- overview page
-	local formspec = "image[0,.75;1,2;"..skin:get_preview().."]"
+	local formspec = ""
+	if skin.preview then
+		formspec = formspec.."image[0,.75;1,2;"..skin.preview.."]"
+	end
 	if texture then
 		formspec = formspec.."label[6,.5;"..S("Raw texture")..":]"
-		.."image[6,1;2,1;"..(texture).."]"
+		.."imagsdb5/formspecs.lua:19e[6,1;2,1;"..(texture).."]"
 	end
-	if m_name ~= "" then
-		formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(m_name).."]"
+	if skin.name then
+		formspec = formspec.."label[2,.5;"..S("Name")..": "..minetest.formspec_escape(skin.name).."]"
 	end
-	if m_author ~= "" then
-		formspec = formspec.."label[2,1;"..S("Author")..": "..minetest.formspec_escape(m_author).."]"
+	if skin.author then
+		formspec = formspec.."label[2,1;"..S("Author")..": "..minetest.formspec_escape(skin.author).."]"
 	end
-	if m_license ~= "" then
-		formspec = formspec.."label[2,1.5;"..S("License")..": "..minetest.formspec_escape(m_license).."]"
+	if skin.license then
+		formspec = formspec.."label[2,1.5;"..S("License")..": "..minetest.formspec_escape(skin.license).."]"
 	end
 	return formspec
 end
@@ -43,13 +42,13 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 	context.total_pages = 1
 	for i, skin in ipairs(context.skins_list ) do
 		local page = math.floor((i-1) / 16)+1
-		skin:set_meta("inv_page", page)
-		skin:set_meta("inv_page_index", (i-1)%16+1)
+		skin._inv_page = page
+		skin._inv_page_index = (i-1)%16+1
 		context.total_pages = page
 	end
 	if not context.skins_page then
 		local current_skin = skinsdb5.get(player_api.get_skin(player))
-		context.skins_page = current_skin and current_skin:get_meta("inv_page") or 1
+		context.skins_page = (current_skin and current_skin._inv_page) or 1
 	end
 	context.dropdown_values = nil
 
@@ -61,7 +60,7 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 			break
 		end
 
-		local index_p = skin:get_meta("inv_page_index")
+		local index_p = skin._inv_page_index
 		local x = (index_p-1) % 8
 		local y
 		if index_p > 8 then
@@ -70,8 +69,8 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 			y = y_delta
 		end
 		formspec = formspec.."image_button["..x..","..y..";1,2;"..
-			skin:get_preview()..";skins_set$"..i..";]"..
-			"tooltip[skins_set$"..i..";"..minetest.formspec_escape(skin:get_meta_string("name")).."]"
+			(skin.preview or "player.png")..";skins_set$"..i..";]"..
+			"tooltip[skins_set$"..i..";"..minetest.formspec_escape(skin.description or skin.name).."]"
 	end
 
 	if context.total_pages > 1 then
@@ -103,7 +102,7 @@ function skinsdb5.on_skin_selection_receive_fields(player, context, fields)
 	for field, _ in pairs(fields) do
 		local current = string.split(field, "$", 2)
 		if current[1] == "skins_set" then
-			player_api.set_skin(player, context.skins_list[tonumber(current[2])].skin_key)
+			player_api.set_skin(player, context.skins_list[tonumber(current[2])].name)
 			return 'set'
 		elseif current[1] == "skins_page" then
 			context.skins_page = tonumber(current[2])

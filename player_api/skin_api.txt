@@ -1,7 +1,7 @@
 ## The registered skin requires at least one texture file that can appiled to player.
 
 name               Skin technical name as registered (always set by player_api.register_skin())
-model              Player model to be used with the skin. If not set, the default model is used
+model_name         Player model to be used with the skin. If not set, the default model is used
 texture            Single file texture, will be used as `textures = { texture }`
 textures           Skin textures table
 

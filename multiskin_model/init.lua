@@ -54,6 +54,6 @@ player_api.register_skin_modifier(function(textures, player, player_model, playe
 		return
 	end
 	if player_api.registered_skins[player_skin].format == '1.8' then
-		table.insert(textures, 1, nil)
+		table.insert(textures, 1, "blank.png")
 	end
 end)

@@ -18,3 +18,9 @@ sfinv.register_page("skinsdb5:overview", {
 		skinsdb5.on_skin_selection_receive_fields(player, context, fields)
 	end
 })
+
+player_api.register_on_skin_change(function(player, model_name, skin_name)
+	if sfinv.enabled then
+		sfinv.set_player_inventory_formspec(player)
+	end
+end)

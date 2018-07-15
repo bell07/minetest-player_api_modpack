@@ -32,9 +32,3 @@ end)
 
 -- Read current mod textures- and meta- folder
 skinsdb5.read_textures_and_meta()
-
-player_api.register_on_skin_change(function(player, model_name, skin_name)
-	if minetest.global_exists("sfinv") and sfinv.enabled then
-		sfinv.set_player_inventory_formspec(player)
-	end
-end)

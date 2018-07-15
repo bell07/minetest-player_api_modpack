@@ -40,9 +40,17 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	local context = skinsdb5.get_formspec_context(player)
 	local action = skinsdb5.on_skin_selection_receive_fields(player, context, fields)
-	if action == 'set' then
+	if action == "set" then
 		unified_inventory.set_inventory_formspec(player, "skins")
-	elseif action == 'page' then
+	elseif action == "page" then
 		unified_inventory.set_inventory_formspec(player, "skins_page")
+	end
+end)
+
+player_api.register_on_skin_change(function(player, model_name, skin_name)
+	local player_name = player:get_player_name()
+	-- refresh skins page if selected
+	if unified_inventory.current_page[player_name] == "skins" then
+		unified_inventory.set_inventory_formspec(player, "skins")
 	end
 end)

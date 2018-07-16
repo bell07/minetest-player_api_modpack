@@ -142,6 +142,81 @@ function player_api.get_skin(player)
 	end
 end
 
+local textures_skin_prefix = {
+	character = true,
+	player = true
+}
+
+local textures_skin_suffix_blacklist = {
+	preview = true,
+	back = true
+}
+player_api.textures_skin_prefix = textures_skin_prefix
+player_api.textures_skin_suffix_blacklist = textures_skin_suffix_blacklist
+
+-- Read and analyze data in textures and metadata folder and register them
+function player_api.read_textures_and_meta(hook)
+	local modpath = minetest.get_modpath(minetest.get_current_modname())
+	for _, fn in pairs(minetest.get_dir_list(modpath..'/textures/')) do
+		local nameparts = string.gsub(fn, "[.]", "_"):split("_")
+		if not textures_skin_prefix[nameparts[1]] then
+			goto continue
+		end
+
+		if nameparts[#nameparts]:lower() ~= 'png' then
+			goto continue
+		end
+		table.remove(nameparts, #nameparts)
+
+		if textures_skin_suffix_blacklist[nameparts[#nameparts]] then
+			goto continue
+		end
+
+		local skin = {texture = fn}
+		local skin_id = table.concat(nameparts,'_')
+		if nameparts[1] == "player" then
+			if not nameparts[2] then
+				goto continue
+			end
+			skin.playername = nameparts[2]
+		end
+
+		local file = io.open(modpath.."/meta/"..skin_id..".txt", "r")
+		if file then
+			local data = minetest.deserialize("return {" .. file:read('*all') .. "}")
+			file:close()
+			if data then
+				for k, v in pairs(data) do
+					skin[k] = v
+				end
+				if data.name and not data.description then -- name is reserved for registration skin_id
+					skin.description = data.name
+				end
+			end
+		end
+		file = nil
+		file = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
+		if file then
+			file:close()
+			skin.preview = skin_id.."_preview.png"
+		end
+
+		if not skin.description then
+			if nameparts[2] then
+				table.remove(nameparts, 1)
+			end
+			skin.description = table.concat(nameparts,'_')
+		end
+
+		if hook then
+			hook(modpath..'/textures/'..fn, skin)
+		end
+		player_api.register_skin(skin_id, skin)
+
+		::continue::
+	end
+end
+
 function player_api.set_animation(player, anim_name, speed)
 	local name = player:get_player_name()
 	if player_anim[name] == anim_name then

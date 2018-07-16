@@ -26,18 +26,16 @@ player_api.register_model("upright_sprite", {
 	eye_height = 1.625,
 })
 
--- Default player skin
-player_api.register_skin("sam", {
-	texture = "character.png",
-})
+player_api.read_textures_and_meta()
 
 player_api.register_skin("sprite", {
+	description = "Demo sprite player",
 	textures = { "player.png", "player_back.png" },
 	model_name = "upright_sprite",
 })
 
 player_api.default_model = "character.b3d"
-player_api.default_skin = "sam"
+player_api.default_skin = "character"
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)

@@ -1,12 +1,3 @@
--- Load the skins
-local skins_dir_list = minetest.get_dir_list(minetest.get_modpath("spsp").."/textures")
-for _, fn in pairs(skins_dir_list) do
-	if fn:sub(-4):lower() == '.png' then
-		local skin_name = fn:lower():sub(1,-5) --cut .png
-		player_api.register_skin(skin_name, { texture = fn })
-	end
-end
-
 -- Override the player_api hook
 local player_api_get_skin = player_api.get_skin
 function player_api.get_skin(player)
@@ -58,3 +49,5 @@ minetest.register_chatcommand("skin", {
 		end
 	end
 })
+
+player_api.read_textures_and_meta()

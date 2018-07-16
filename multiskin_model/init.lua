@@ -82,3 +82,9 @@ function multiskin_model.get_skin_format(file)
 		end
 	end
 end
+
+player_api.read_textures_and_meta(function(filename, skin)
+	local file = io.open(filename, "r")
+	skin.format = multiskin_model.get_skin_format(file)
+	file:close()
+end)

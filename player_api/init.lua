@@ -32,6 +32,7 @@ player_api.register_skin("sprite", {
 	description = "Demo sprite player",
 	textures = { "player.png", "player_back.png" },
 	model_name = "upright_sprite",
+	preview = "player.png"
 })
 
 player_api.default_model = "character.b3d"

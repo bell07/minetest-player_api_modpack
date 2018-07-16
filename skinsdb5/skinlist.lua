@@ -4,7 +4,7 @@ function skinsdb5.read_textures_and_meta()
 	for _, fn in pairs(skins_dir_list) do
 		local nameparts = string.gsub(fn, "[.]", "_"):split("_")
 
-		local name, sort_id, assignment, is_preview, playername
+		local name, sort_id, is_preview, playername
 		if nameparts[1] == "character" then
 			sort_id = 5000
 			if nameparts[2] == "preview" then
@@ -21,7 +21,6 @@ function skinsdb5.read_textures_and_meta()
 				is_preview = (nameparts[3] == "preview")
 			end
 		elseif nameparts[1] == "player" then
-			assignment = "player:"..nameparts[2] --TODO: remove all assignment handling
 			name = "player_"..nameparts[2]
 			playername = nameparts[2]
 			if tonumber(nameparts[3]) then
@@ -85,8 +84,8 @@ function skinsdb5.get_skinlist_for_player(playername)
 			table.insert(skinslist, skin)
 		end
 	end
-	table.sort(skinslist, function(a,b) return (tostring(a.sort_id) or
-			a.description or a.name or "") < (tostring(b.sort_id) or b.description or b.name or "") end)
+	table.sort(skinslist, function(a,b) return tostring(a.sort_id or
+			a.description or a.name or "") < tostring(b.sort_id or b.description or b.name or "") end)
 	return skinslist
 end
 

@@ -10,7 +10,6 @@ This Minetest mod offers changeable player skins with a graphical interface for 
 - Skin previews supported in selection
 - Additional information for each skin
 - Support for different skins lists: public and a per-player list are currently implemented
-- Compatible to 1.0 and 1.8 Minecraft skins format using multiskin_model mod
 
 ## License
 

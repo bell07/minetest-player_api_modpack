@@ -74,7 +74,7 @@ function skinsdb5.get_skin_selection_formspec(player, context, y_delta)
 			y = y_delta
 		end
 		formspec = formspec.."image_button["..x..","..y..";1,2;"..
-			(skin.preview or "player.png")..";skins_set$"..i..";]"..
+			(skin.preview or "character_default_preview.png")..";skins_set$"..i..";]"..
 			"tooltip[skins_set$"..i..";"..minetest.formspec_escape(skin.description or skin.name).."]"
 	end
 

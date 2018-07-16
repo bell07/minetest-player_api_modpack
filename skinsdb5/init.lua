@@ -31,4 +31,4 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 -- Read current mod textures- and meta- folder
-skinsdb5.read_textures_and_meta()
+player_api.read_textures_and_meta()

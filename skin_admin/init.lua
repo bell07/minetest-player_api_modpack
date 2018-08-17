@@ -1,21 +1,6 @@
--- Override the player_api hook
-local player_api_get_skin = player_api.get_skin
-function player_api.get_skin(player)
-	local assigned_skin, is_default = player_api_get_skin(player)
-	if is_default then
-		local name = player:get_player_name()
-		local player_skin = "player_"..name:lower()
-		if player_api.registered_skins[player_skin] then
-			assigned_skin = player_skin
-		end
-	end
-	return assigned_skin, is_default
-end
-
-
-minetest.register_chatcommand("skin", {
+minetest.register_chatcommand("skinadm", {
 	params = "list | set <playername> <skin key>",
-	description = "list or set skin for a player",
+	description = "Set skin for a player on server",
 	privs = {server = true},
 	func = function(name, param)
 		-- parse command line
@@ -23,12 +8,15 @@ minetest.register_chatcommand("skin", {
 		local command = words[1]
 		if command == "list" then
 			local list_sorted = {}
-			for skin_key, _ in pairs(player_api.registered_skins) do
-				table.insert(list_sorted, skin_key)
+			for _, skin in pairs(player_api.registered_skins) do
+				table.insert(list_sorted, skin)
 			end
-			table.sort(list_sorted)
-			for _, skin_key in ipairs(list_sorted) do
-				minetest.chat_send_player(name, skin_key)
+			table.sort(list_sorted, function(a,b) return tostring(a.sort_id or a.name or "") <
+					tostring(b.sort_id or b.name or "") end)
+			for _, skin in ipairs(list_sorted) do
+				minetest.chat_send_player(name, skin.name..'\t'..(skin.description or "")..
+						(skin.in_inventory_list and " (hidden)" or "")..
+						(skin.playername and " (private by "..skin.playername..")" or ""))
 			end
 		elseif command == "set" then
 			local playername = words[2]
@@ -49,5 +37,3 @@ minetest.register_chatcommand("skin", {
 		end
 	end
 })
-
-player_api.read_textures_and_meta()

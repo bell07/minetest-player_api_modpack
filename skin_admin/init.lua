@@ -29,11 +29,11 @@ minetest.register_chatcommand("skinadm", {
 				return false, "player "..playername.." unknown or offline"
 			end
 			if not player_api.registered_skins[selected_skin] then
-				return false, "invalid skin "..selected_skin..". try /skin list"
+				return false, "invalid skin "..selected_skin..". try /skinadm list"
 			end
 			player_api.set_skin(player, selected_skin)
 		else
-			return false, "parameter required. see /help skin"
+			return false, "parameter required. see /help skinadm"
 		end
 	end
 })

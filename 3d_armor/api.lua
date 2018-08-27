@@ -274,11 +274,13 @@ armor.set_player_armor = function(self, player)
 	else
 		player:set_physics_override(physics)
 	end
-	self.textures[name] = texture
+	self.textures[name].armor = texture
+	self.textures[name].preview = preview
 	self.def[name].level = self.def[name].groups.fleshy or 0
 	self.def[name].state = state
 	self.def[name].count = count
 	player_api.update_textures(player)
+	self:run_callbacks("on_update", player)
 end
 
 armor.punch = function(self, player, hitter, time_from_last_punch, tool_capabilities)
@@ -387,7 +389,7 @@ armor.get_armor_formspec = function(self, name, listring)
 		formspec = formspec.."listring[current_player;main]"..
 			"listring[detached:"..name.."_armor;armor]"
 	end
-	formspec = formspec:gsub("armor_preview", armor:get_preview(name))
+	formspec = formspec:gsub("armor_preview", self.textures[name].preview)
 	formspec = formspec:gsub("armor_level", armor.def[name].level)
 	for _, attr in pairs(self.attributes) do
 		formspec = formspec:gsub("armor_attr_"..attr, armor.def[name][attr])

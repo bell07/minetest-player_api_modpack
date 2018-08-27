@@ -66,10 +66,11 @@ end
 
 player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
 	local name = player:get_player_name()
-	if textures.armor and armor.textures[name] then
-		textures.armor = textures.armor..'^'..armor.textures[name]
+	local player_armor = armor.textures[name] and armor.textures[name].armor
+	if textures.armor and player_armor then
+		textures.armor = textures.armor..'^'..player_armor
 	else
-		textures.armor = textures.armor or armor.textures[name] or "blank.png"
+		textures.armor = textures.armor or player_armor or "blank.png"
 	end
 end)
 
@@ -233,6 +234,7 @@ local function init_player_armor(player)
 	for group, _ in pairs(armor.registered_groups) do
 		armor.def[name].groups[group] = 0
 	end
+	armor.textures[name] = {}
 	armor:set_player_armor(player)
 	return true
 end

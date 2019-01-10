@@ -389,7 +389,7 @@ armor.get_armor_formspec = function(self, name, listring)
 		formspec = formspec.."listring[current_player;main]"..
 			"listring[detached:"..name.."_armor;armor]"
 	end
-	formspec = formspec:gsub("armor_preview", self.textures[name].preview)
+	formspec = formspec:gsub("armor_preview", armor.textures[name].preview)
 	formspec = formspec:gsub("armor_level", armor.def[name].level)
 	for _, attr in pairs(self.attributes) do
 		formspec = formspec:gsub("armor_attr_"..attr, armor.def[name][attr])

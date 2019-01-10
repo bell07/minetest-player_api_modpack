@@ -251,6 +251,7 @@ minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	if name then
 		armor.def[name] = nil
+		armor.textures[name] = nil
 	end
 	pending_players[player] = nil
 end)

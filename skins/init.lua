@@ -16,7 +16,7 @@ local skins_formspec_main = function(name, context)
 			tostring(b.sort_id or b.description or b.name or "") end)
 
 	local current_skin_name = player_api.get_skin(minetest.get_player_by_name(name))
-	local selected_skin
+	local selected_skin = player_api.registered_skins[current_skin_name]
 	local selected = 1
 	for i = 1, #skins_list do
 		local skin = skins_list[i]
@@ -26,13 +26,12 @@ local skins_formspec_main = function(name, context)
 		end
 		if skin.name == current_skin_name then
 			selected = i
-			selected_skin = skin
 		end
 	end
 	formspec = formspec .. ";" .. selected .. ";false]"
 	if selected_skin then
 		if selected_skin.description then
-			formspec = formspec .. "label[0.0,0.0;" .. "Name: " .. selected_skin.description .. "]"
+			formspec = formspec .. "label[0.0,0.0;" .. "Current skin: " .. selected_skin.description .. "]"
 		end
 		if selected_skin.author then
 			formspec = formspec .. "label[0.0,0.5;" .. "Author: " .. selected_skin.author .. "]"

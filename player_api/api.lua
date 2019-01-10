@@ -132,14 +132,17 @@ function player_api.set_skin(player, skin_name, is_default)
 	end
 end
 
--- Get the skin on join. Can be used as hook
+-- Get current assigned or default skin for player
 function player_api.get_skin(player)
 	local assigned_skin = player:get_attribute("player_api:skin")
 	if assigned_skin then
 		return assigned_skin, false
-	else
-		return player_api.default_skin, true
 	end
+	local skinname = "player_"..player:get_player_name():lower()
+	if player_api.registered_skins[skinname] then
+		return skinname, true
+	end
+	return player_api.default_skin, true
 end
 
 local textures_skin_prefix = {
@@ -194,10 +197,9 @@ function player_api.read_textures_and_meta(hook)
 				end
 			end
 		end
-		file = nil
-		file = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
-		if file then
-			file:close()
+		local file2 = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
+		if file2 then
+			file2:close()
 			skin.preview = skin_id.."_preview.png"
 		end
 

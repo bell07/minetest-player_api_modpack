@@ -369,4 +369,10 @@ elseif minetest.global_exists("inventory_plus") then
 			show_formspec(player)
 		end
 	end)
+elseif minetest.get_modpath("sfinv_buttons") then
+	sfinv_buttons.register_button("character_creator", {
+		image = "inventory_plus_character_creator.png",
+		title = "Character Creator",
+		action = show_formspec,
+	})
 end

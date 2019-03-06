@@ -414,3 +414,8 @@ if armor.config.water_protect == true or armor.config.fire_protect == true then
 		armor.timer = 0
 	end)
 end
+
+-- Update the armor and
+player_api.register_on_skin_change(function(player, model_name, skin_name)
+	armor:set_player_armor(player)
+end)

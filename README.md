@@ -14,3 +14,4 @@ The mods in this modpack are stripped down away from all compadibility hacky to 
 | clothing | Provides clothing skins modifier for multiskin_model | https://github.com/stujones11/clothing
 | wieldview | Provides wielded item skins modifier for multiskin_model | https://github.com/stujones11/minetest-3d_armor/tree/master/wieldview
 | character_creator | Customizeable/dynamic player skin | https://github.com/minetest-mods/character_creator
+| homedecor | The Wardrobe is ported to new player_api | https://gitlab.com/VanessaE/homedecor_modpack/blob/master/homedecor/wardrobe.lua

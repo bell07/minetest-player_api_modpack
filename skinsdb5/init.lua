@@ -12,7 +12,7 @@ else
 	skinsdb5.S = function(s) return s end
 end
 
-dofile(modpath.."/skinlist.lua")
+dofile(modpath.."/api.lua")
 dofile(modpath.."/formspecs.lua")
 dofile(modpath.."/chatcommands.lua")
 -- Unified inventory page/integration

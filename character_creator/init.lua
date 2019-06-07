@@ -196,7 +196,7 @@ local function change_skin(player)
 	skin_obj.texture = get_texture(player)
 	skin_obj.preview = nil --rebuild
 	save_skin(player)
-	player_api.update_textures(player)
+	player_api.set_skin(player, "character_creator:"..playername, false, true)
 end
 
 player_api.register_skin_modifier(function(textures, player, player_model, player_skin)

@@ -145,36 +145,25 @@ function player_api.get_skin(player)
 	return player_api.default_skin, true
 end
 
-local textures_skin_prefix = {
-	character = true,
-	player = true
-}
-
 local textures_skin_suffix_blacklist = {
 	preview = true,
 	back = true
 }
-player_api.textures_skin_prefix = textures_skin_prefix
 player_api.textures_skin_suffix_blacklist = textures_skin_suffix_blacklist
 
 -- Read and analyze data in textures and metadata folder and register them
 function player_api.read_textures_and_meta(hook)
 	local modpath = minetest.get_modpath(minetest.get_current_modname())
 	for _, fn in pairs(minetest.get_dir_list(modpath..'/textures/')) do
-		local skin
-		local skin_id
 		local nameparts = fn:sub(1, -5):split("_")
-		
-		if textures_skin_prefix[nameparts[1]] then
+		local prefix = nameparts[1]
+		if ( prefix == 'player' and nameparts[2] or prefix == 'character' ) then
 			if not textures_skin_suffix_blacklist[nameparts[#nameparts]] then
-				skin = {texture = fn}
-				skin_id = table.concat(nameparts,'_')
-				if nameparts[1] == "player" then
-					if nameparts[2] then
-						skin.playername = nameparts[2]
-					end
-				end
 
+				local skin = {texture = fn}
+				local skin_id = table.concat(nameparts,'_')
+
+				-- get metadata from file
 				local file = io.open(modpath.."/meta/"..skin_id..".txt", "r")
 				if file then
 					local data = minetest.deserialize("return {" .. file:read('*all') .. "}")
@@ -188,23 +177,30 @@ function player_api.read_textures_and_meta(hook)
 						end
 					end
 				end
-				local file2 = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
-				if file2 then
-					file2:close()
-					skin.preview = skin_id.."_preview.png"
-				end
-			
 				if not skin.description then
 					if nameparts[2] then
 						table.remove(nameparts, 1)
 					end
 					skin.description = table.concat(nameparts,' ')
 				end
-			
+
+				-- Check if preview exists
+				local file2 = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
+				if file2 then
+					file2:close()
+					skin.preview = skin_id.."_preview.png"
+				end
+
+				-- Check for private
+				if prefix == "player" then
+					skin.playername = nameparts[2]
+				end
+
+				-- process hook
 				if hook then
 					hook(modpath..'/textures/'..fn, skin)
 				end
-				
+
 				player_api.register_skin(skin_id, skin)
 			end
 		end

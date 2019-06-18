@@ -161,56 +161,53 @@ player_api.textures_skin_suffix_blacklist = textures_skin_suffix_blacklist
 function player_api.read_textures_and_meta(hook)
 	local modpath = minetest.get_modpath(minetest.get_current_modname())
 	for _, fn in pairs(minetest.get_dir_list(modpath..'/textures/')) do
+		local skin
+		local skin_id
 		local nameparts = fn:sub(1, -5):split("_")
-		if not textures_skin_prefix[nameparts[1]] then
-			goto continue
-		end
-
-		if textures_skin_suffix_blacklist[nameparts[#nameparts]] then
-			goto continue
-		end
-
-		local skin = {texture = fn}
-		local skin_id = table.concat(nameparts,'_')
-		if nameparts[1] == "player" then
-			if not nameparts[2] then
-				goto continue
-			end
-			skin.playername = nameparts[2]
-		end
-
-		local file = io.open(modpath.."/meta/"..skin_id..".txt", "r")
-		if file then
-			local data = minetest.deserialize("return {" .. file:read('*all') .. "}")
-			file:close()
-			if data then
-				for k, v in pairs(data) do
-					skin[k] = v
+		
+		if textures_skin_prefix[nameparts[1]] then
+			if not textures_skin_suffix_blacklist[nameparts[#nameparts]] then
+				skin = {texture = fn}
+				skin_id = table.concat(nameparts,'_')
+				if nameparts[1] == "player" then
+					if nameparts[2] then
+						skin.playername = nameparts[2]
+					end
 				end
-				if data.name and not data.description then -- name is reserved for registration skin_id
-					skin.description = data.name
+
+				local file = io.open(modpath.."/meta/"..skin_id..".txt", "r")
+				if file then
+					local data = minetest.deserialize("return {" .. file:read('*all') .. "}")
+					file:close()
+					if data then
+						for k, v in pairs(data) do
+							skin[k] = v
+						end
+						if data.name and not data.description then -- name is reserved for registration skin_id
+							skin.description = data.name
+						end
+					end
 				end
+				local file2 = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
+				if file2 then
+					file2:close()
+					skin.preview = skin_id.."_preview.png"
+				end
+			
+				if not skin.description then
+					if nameparts[2] then
+						table.remove(nameparts, 1)
+					end
+					skin.description = table.concat(nameparts,' ')
+				end
+			
+				if hook then
+					hook(modpath..'/textures/'..fn, skin)
+				end
+				
+				player_api.register_skin(skin_id, skin)
 			end
 		end
-		local file2 = io.open(modpath.."/textures/"..skin_id.."_preview.png", "r")
-		if file2 then
-			file2:close()
-			skin.preview = skin_id.."_preview.png"
-		end
-
-		if not skin.description then
-			if nameparts[2] then
-				table.remove(nameparts, 1)
-			end
-			skin.description = table.concat(nameparts,' ')
-		end
-
-		if hook then
-			hook(modpath..'/textures/'..fn, skin)
-		end
-		player_api.register_skin(skin_id, skin)
-
-		::continue::
 	end
 end
 

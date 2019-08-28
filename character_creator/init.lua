@@ -201,7 +201,6 @@ local function change_skin(player)
 	skin_obj.texture = get_texture(player)
 	skin_obj.preview = nil --rebuild
 	save_skin(player)
-	player_api.set_skin(player, "character_creator:"..playername, false, true)
 end
 
 player_api.register_skin_modifier(function(textures, player, player_model, player_skin)
@@ -348,6 +347,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			quit = true
 		end
 		change_skin(player)
+		player_api.set_skin(player, "character_creator:"..player:get_player_name(), false, true)
 		if not quit then
 			show_formspec(player)
 		end

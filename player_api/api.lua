@@ -7,13 +7,15 @@ player_api = {}
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
 
-player_api.registered_models = { }
-player_api.registered_skins = { }
+player_api.registered_models = {}
+player_api.registered_skins = {}
+player_api.registered_skin_dyn_values = {}
 -- Local for speed.
 local models = player_api.registered_models
 local skins = player_api.registered_skins
 local registered_skin_modifiers = {}
 local registered_on_skin_change = {}
+local registered_skin_dyn_values = player_api.registered_skin_dyn_values
 
 function player_api.register_model(name, def)
 	-- compatibility defaults
@@ -29,17 +31,38 @@ function player_api.register_model(name, def)
 	models[name] = def
 end
 
+local skin_meta = { __index = function( skin, key )
+	local dyn_values = registered_skin_dyn_values[key]
+	if not dyn_values then
+		return
+	end
+	local return_value
+	for _, hook in ipairs(dyn_values) do
+		return_value = hook(skin, return_value)
+	end
+	return return_value
+end }
+
+-- Add new skin
 function player_api.register_skin(name, def)
 	def.name = name
-	skins[name] = def
+	skins[name] = setmetatable(def, skin_meta)
 end
 
+-- Modifier function is called before a skin is applied to the player
 function player_api.register_skin_modifier(modifier_func)
 	table.insert(registered_skin_modifiers, modifier_func)
 end
 
+-- Modifier is called after the skin was applied to the player
 function player_api.register_on_skin_change(modifier_func)
 	table.insert(registered_on_skin_change, modifier_func)
+end
+
+-- Modifer is called if a skin attribute "key" was requrested but does not exists for the skin
+function player_api.register_skin_dyn_values(key, hook)
+	registered_skin_dyn_values[key] = registered_skin_dyn_values[key] or {}
+	table.insert(registered_skin_dyn_values[key], hook)
 end
 
 -- Player stats and animations
@@ -63,13 +86,8 @@ end
 
 -- Called when a player's appearance needs to be updated
 function player_api.set_model(player, model_name)
-	local default_model = models[player_api.default_model]
 	local name = player:get_player_name()
-	local model = model_name and models[model_name]
-	if not model then
-		model_name = player_api.default_model
-		model = default_model
-	end
+	local model = models[model_name]
 
 	player:set_properties({
 		mesh = model.mesh,

@@ -46,6 +46,10 @@ end }
 -- Add new skin
 function player_api.register_skin(name, def)
 	def.name = name
+	if not def.textures and def.texture then
+		def.textures = { def.texture }
+		def.texture = nil
+	end
 	skins[name] = setmetatable(def, skin_meta)
 end
 
@@ -112,9 +116,6 @@ function player_api.set_textures(player, textures)
 	elseif skin.textures then
 		textures = table.copy(skin.textures)
 		skin_textures[name] = skin.textures
-	elseif skin.texture then
-		textures = { skin.texture }
-		skin_textures[name] = { skin.texture }
 	else
 		textures = table.copy(model.textures)
 		skin_textures[name] = model.textures

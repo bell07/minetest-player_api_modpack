@@ -18,3 +18,4 @@ The mods in this modpack are stripped down away from all compadibility hacky to 
 | character_creator | Customizeable/dynamic player skin | https://github.com/minetest-mods/character_creator
 | homedecor_wardrobe | Provides some hidden skins, selectable only in Wardrobe | https://gitlab.com/VanessaE/homedecor_modpack/tree/master/homedecor_wardrobe
 | place_your_skins_here | Placeholder mod for own skins |
+| newhand | Provides 3D hand for current player skin | https://github.com/jordan4ibanez/newhand

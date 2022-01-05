@@ -33,7 +33,7 @@ function skinsdb5.get_skin_info_formspec(skin_name, perplayer_formspec)
 
 	local formspec = ""
 	if skin.preview then
-		formspec = "image["..lxoffs..",.6;1,2;"..skin.preview.."]"
+		formspec = "image["..lxoffs..",.6;1,2;"..minetest.formspec_escape(skin.preview).."]"
 	end
 
 	if texture then
@@ -133,7 +133,7 @@ function skinsdb5.get_skin_selection_formspec(player, context, perplayer_formspe
 		formspec = formspec..
 			string.format("image_button[%f,%f;%f,%f;%s;skins_set$%i;]",
 				x, y, skinwidth, skinheight,
-				skin.preview or "", i)..
+				minetest.formspec_escape(skin.preview or ""), i)..
 			"tooltip[skins_set$"..i..";"..minetest.formspec_escape(skin.name).."]"
 	end
 
